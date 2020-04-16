@@ -1,0 +1,6 @@
+
+{% if stats %}
+{% for key, value in stats.items %}
+    <li>{{key}}: {{value}}</li>
+{% endfor %}
+{% endif %}

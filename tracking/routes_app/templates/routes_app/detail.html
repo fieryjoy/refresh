@@ -1,0 +1,37 @@
+<h1>{{ route }}</h1>
+
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<ul>
+    {% for point in route.point_set.all %}
+        <li>{{ point }}</li>
+    {% endfor %}
+</ul>
+
+{% if route.was_created_today and not length %}
+<form action="{% url 'routes_app:way_point' route.id %}" method="post">
+{% csrf_token %}
+<label for="lat">Latitude</label>
+<input type="number" id="fname" name="lat" min=-90 max=90 step=any required>
+<label for="lon">Longitude</label>
+<input type="number" id="fname" name="lon" min=-180 max=180 step=any required>
+<input type="submit" value="Add">
+</form>
+{% endif %}
+
+{% if length %}
+    <h3>Total length in km</h3>
+        <table>
+            {% for key, value in length.items %}
+            <tr>
+                <td><b>{{ key }}</b></td><td> {{value}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+{% else %}
+<form action="{% url 'routes_app:length' route.id %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Get route's length">
+</form>
+{% endif %}

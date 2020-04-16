@@ -1,0 +1,23 @@
+{% if routes %}
+    <ul>
+        {% for route in routes %}
+            <li><a href="{% url 'routes_app:detail' route.id %}">{{ route }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %} 
+    <p>No routes are available.</p>
+{% endif %}
+
+<form action="{% url 'routes_app:index'%}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Create new route">
+</form>
+
+<form action="{% url 'routes_app:statistics'%}" method="post">
+    {% csrf_token %}
+    <label for="lat">Year</label>
+    <input type="number" id="fyear" name="year" min="2020" max="2020" required>
+    <label for="lon">Month</label>
+    <input type="number" id="fmonth" name="month" min=4 max=12 step=1 required>
+    <input type="submit" value="Show some statistics">
+</form>
