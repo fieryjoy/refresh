@@ -2,8 +2,7 @@ import datetime, calendar
 from django.db import models
 from django.utils import timezone
 
-from .calculation import haversine, vincenty, from_pyproj
-
+from .calculation import haversine
 
 class Route(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
@@ -15,23 +14,15 @@ class Route(models.Model):
         points = self.point_set.all().values('lat', 'lon')
         count = self.point_set.count()
 
-        h_total = 0
-        v_total = 0
-        p_total = 0
+        total = 0
         idx = 0
         while idx + 1 < count:
             coord1 = points[idx]['lat'], points[idx]['lon']
             coord2 = points[idx + 1]['lat'], points[idx + 1]['lon']
-            h_total += haversine(coord1, coord2)
-            v_total += vincenty(coord1, coord2)
-            p_total += from_pyproj(coord1, coord2)
+            total += haversine(coord1, coord2)
             idx += 1 
             
-        return {
-                'vincenty': v_total,
-                'haversine': h_total,
-                'from_pyproj': p_total
-                }
+        return total
 
     def __str__(self):
         return "%s" % self.creation_date.strftime("%d/%m/%Y")
@@ -49,12 +40,12 @@ class Point(models.Model):
 def get_max(date):
     if date.date() == timezone.now().date():
         return 0
-    routes = Route.objects.filter(creation_date__day=date.day, creation_date__month=date.month, creation_date__year=date.year)
+    routes = Route.objects.filter(
+                creation_date__day=date.day, 
+                creation_date__month=date.month, 
+                creation_date__year=date.year)
     if routes:
-        lengths = map(lambda x: x.length(), routes)
-        vincenty_lengths = map(lambda x: x and x['vincenty'], lengths) 
-        maxx = max(vincenty_lengths, default=0)
-        return maxx
+        return max(map(lambda x: x.length(), routes), default=0)
     return 0
 
 def get_stats(year, month):

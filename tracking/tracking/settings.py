@@ -30,6 +30,7 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework',
     'routes_app.apps.RoutesAppConfig',
     'django.contrib.admin',
     'django.contrib.auth',

@@ -32,9 +32,7 @@ class RouteModelTests(TestCase):
         Point(route=route, lat=52.5170365, lon=13.3888599).save()
         Point(route=route, lat=48.2083537, lon=16.3725042).save()
         length = route.length()
-        self.assertTrue(523 < length['vincenty'] < 525)
-        self.assertTrue(523 < length['haversine'] < 525)
-        self.assertTrue(523 < length['from_pyproj'] < 525)
+        self.assertTrue(523 < length < 525)
 
     def test_get_maximum(self):
         past_date = timezone.now() - datetime.timedelta(3)

@@ -1,5 +1,3 @@
 Django
+djangorestframework
 psycopg2-binary
-geopy
-pyproj==1.9.6
-tox
